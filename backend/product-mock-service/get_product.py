@@ -10,9 +10,9 @@ with open("product_list.json", "r") as product_list:
     product_list = json.load(product_list)
 
 HEADERS = {
-    "Access-Control-Allow-Origin": os.environ.get("ALLOWED_ORIGIN"),
+    "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Headers": "Content-Type",
-    "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+    "Access-Control-Allow-Methods": "POST,GET",
 }
 
 
@@ -31,6 +31,5 @@ def lambda_handler(event, context):
 
     return {
         "statusCode": 200,
-        "headers": HEADERS,
         "body": json.dumps({"product": product}),
     }

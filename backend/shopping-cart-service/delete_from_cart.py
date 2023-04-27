@@ -6,8 +6,8 @@ from aws_lambda_powertools import Logger, Tracer
 
 logger = Logger()
 tracer = Tracer()
-
-dynamodb = boto3.resource("dynamodb")
+endpoint_url = "http://localhost.localstack.cloud:4566"
+dynamodb = boto3.resource("dynamodb", endpoint_url=endpoint_url)
 table = dynamodb.Table(os.environ["TABLE_NAME"])
 
 

@@ -4,8 +4,12 @@ var fs = require('fs');
 var args = process.argv.slice(2);
 var envtype = args[0] ? args[0] : ''
 var AWS = require('aws-sdk');
-var ssm = new AWS.SSM();
-
+var ssm = new AWS.SSM({
+    endpoint: 'http://localhost:4566',
+    accessKeyId: 'test',
+    secretAccessKey: 'test',
+    region: 'us-east-1',
+});
 
 const query = {
     "Path": "/serverless-shopping-cart-demo/",
@@ -25,7 +29,12 @@ function formatParams(data) {
     for (var param of data) {
         const paramName = param.Name.toUpperCase().split("/").pop().replace(/-/g, "_")
         if (requiredParams.includes(paramName)) {
-            output.push("VUE_APP_" + paramName + '=' + param.Value)
+            var paramValue = param.Value
+            if (paramName == "CART_API_URL" || paramName == "PRODUCTS_API_URL") {
+                // Replace the "execute-api.amazonaws.com" with "execute-api.localhost.localstack.cloud"
+                paramValue = paramValue.replace(/execute-api\.amazonaws\.com/, "execute-api.localhost.localstack.cloud")
+            }
+            output.push("VUE_APP_" + paramName + '=' + paramValue)
         }
     }
 }

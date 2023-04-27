@@ -11,10 +11,10 @@ from shared import generate_ttl, get_cart_id, get_headers, handle_decimal_type
 logger = Logger()
 tracer = Tracer()
 metrics = Metrics()
-
-dynamodb = boto3.resource("dynamodb")
+endpoint_url = "http://localhost.localstack.cloud:4566"
+dynamodb = boto3.resource("dynamodb", endpoint_url=endpoint_url)
 table = dynamodb.Table(os.environ["TABLE_NAME"])
-sqs = boto3.resource("sqs")
+sqs = boto3.resource("sqs", endpoint_url=endpoint_url)
 queue = sqs.Queue(os.environ["DELETE_FROM_CART_SQS_QUEUE"])
 
 
@@ -58,7 +58,6 @@ def lambda_handler(event, context):
 
         return {
             "statusCode": 400,
-            "headers": get_headers(cart_id),
             "body": json.dumps({"message": "Invalid user"}),
         }
 
@@ -107,6 +106,5 @@ def lambda_handler(event, context):
 
     return {
         "statusCode": 200,
-        "headers": get_headers(cart_id),
         "body": json.dumps({"products": product_list}, default=handle_decimal_type),
     }
