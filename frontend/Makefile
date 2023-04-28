@@ -2,7 +2,7 @@ all: build
 
 serve:
 	yarn install
-	# yarn fetchConfig local
+	yarn fetchConfig local
 	yarn serve
 
 build:
