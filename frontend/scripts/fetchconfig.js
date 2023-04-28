@@ -4,7 +4,12 @@ var fs = require('fs');
 var args = process.argv.slice(2);
 var envtype = args[0] ? args[0] : ''
 var AWS = require('aws-sdk');
-var ssm = new AWS.SSM();
+var ssm = new AWS.SSM({
+    endpoint: 'http://localhost:4566',
+    accessKeyId: 'test',
+    secretAccessKey: 'test',
+    region: 'us-east-1',
+});
 
 
 const query = {
@@ -34,12 +39,13 @@ params
     .then(data => {
         formatParams(data.Parameters)
         output.push("VUE_APP_AWS_REGION=" + AWS.config.region)
+        // output.push("VUE_APP_AWS_REGION=us-east-1")
         var fileName
         if (envtype) {
             fileName = "./.env." + envtype
         }
         else {
-            fileName = "./.env"
+            fileName = "./.env.local"
         }
         fs.writeFile(fileName, output.join('\n'), function (err) {
             if (err) {
