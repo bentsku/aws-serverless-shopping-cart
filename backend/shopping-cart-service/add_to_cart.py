@@ -16,8 +16,8 @@ from utils import get_product_from_external_service
 logger = Logger()
 tracer = Tracer()
 metrics = Metrics()
-endpoint_url = "http://localhost.localstack.cloud:4566"
-dynamodb = boto3.resource("dynamodb", endpoint_url=endpoint_url)
+
+dynamodb = boto3.resource("dynamodb")
 table = dynamodb.Table(os.environ["TABLE_NAME"])
 product_service_url = os.environ["PRODUCT_SERVICE_URL"]
 
@@ -36,6 +36,7 @@ def lambda_handler(event, context):
     except KeyError:
         return {
             "statusCode": 400,
+            "headers": get_headers(),
             "body": json.dumps({"message": "No Request payload"}),
         }
     product_id = request_payload["productId"]
@@ -54,6 +55,7 @@ def lambda_handler(event, context):
     except NotFoundException:
         return {
             "statusCode": 404,
+            "headers": get_headers(cart_id=cart_id),
             "body": json.dumps({"message": "product not found"}),
         }
 
@@ -105,6 +107,7 @@ def lambda_handler(event, context):
 
     return {
         "statusCode": 200,
+        "headers": get_headers(cart_id),
         "body": json.dumps(
             {"productId": product_id, "message": "product added to cart"}
         ),

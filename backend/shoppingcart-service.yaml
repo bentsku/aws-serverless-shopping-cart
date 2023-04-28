@@ -39,7 +39,7 @@ Globals:
     TracingEnabled: true
     OpenApiVersion: '2.0'
     Cors:
-      AllowMethods: "'POST,GET,PUT'"
+      AllowMethods: "'OPTIONS,POST,GET,PUT'"
       AllowHeaders: "'Content-Type,Authorization'"
       AllowCredentials: true
       AllowOrigin: !Sub "'${AllowedOrigin}'"

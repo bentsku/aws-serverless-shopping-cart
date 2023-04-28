@@ -10,8 +10,8 @@ from shared import get_cart_id, get_headers, handle_decimal_type
 logger = Logger()
 tracer = Tracer()
 metrics = Metrics()
-endpoint_url = "http://localhost.localstack.cloud:4566"
-dynamodb = boto3.resource("dynamodb", endpoint_url=endpoint_url)
+
+dynamodb = boto3.resource("dynamodb")
 
 logger.debug("Initializing DDB Table %s", os.environ["TABLE_NAME"])
 table = dynamodb.Table(os.environ["TABLE_NAME"])
@@ -34,6 +34,7 @@ def lambda_handler(event, context):
 
         return {
             "statusCode": 400,
+            "headers": get_headers(cart_id),
             "body": json.dumps({"message": "Invalid user"}),
         }
 
@@ -56,6 +57,7 @@ def lambda_handler(event, context):
 
     return {
         "statusCode": 200,
+        "headers": get_headers(cart_id),
         "body": json.dumps(
             {"products": response.get("Items")}, default=handle_decimal_type
         ),

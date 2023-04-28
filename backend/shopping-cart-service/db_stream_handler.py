@@ -7,8 +7,8 @@ from boto3.dynamodb import types
 
 logger = Logger()
 tracer = Tracer()
-endpoint_url = "http://localhost.localstack.cloud:4566"
-dynamodb = boto3.resource("dynamodb", endpoint_url=endpoint_url)
+
+dynamodb = boto3.resource("dynamodb")
 table = dynamodb.Table(os.environ["TABLE_NAME"])
 
 deserializer = types.TypeDeserializer()

@@ -4,13 +4,13 @@ import os
 import boto3
 from aws_lambda_powertools import Logger, Tracer
 from boto3.dynamodb.conditions import Key
-endpoint_url = "http://localhost.localstack.cloud:4566"
+
 from shared import get_cart_id, get_headers, get_user_sub, handle_decimal_type
 
 logger = Logger()
 tracer = Tracer()
 
-dynamodb = boto3.resource("dynamodb", endpoint_url=endpoint_url)
+dynamodb = boto3.resource("dynamodb")
 table = dynamodb.Table(os.environ["TABLE_NAME"])
 
 
@@ -55,5 +55,6 @@ def lambda_handler(event, context):
 
     return {
         "statusCode": 200,
+        "headers": get_headers(cart_id),
         "body": json.dumps({"products": product_list}, default=handle_decimal_type),
     }
