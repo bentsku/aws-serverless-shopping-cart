@@ -11,14 +11,14 @@ endif
 
 
 backend: create-bucket
-	$(MAKE) -C backend TEMPLATE=auth S3_BUCKET=$(S3_BUCKET)
-	$(MAKE) -C backend TEMPLATE=product-mock S3_BUCKET=$(S3_BUCKET)
-	$(MAKE) -C backend TEMPLATE=shoppingcart-service S3_BUCKET=$(S3_BUCKET)
+	$(MAKE) -C backend TEMPLATE=auth S3_BUCKET=$(S3_BUCKET) REGION=${REGION}
+	$(MAKE) -C backend TEMPLATE=product-mock S3_BUCKET=$(S3_BUCKET) REGION=${REGION}
+	$(MAKE) -C backend TEMPLATE=shoppingcart-service S3_BUCKET=$(S3_BUCKET) REGION=${REGION}
 
 backend-delete:
-	$(MAKE) -C backend delete TEMPLATE=auth
-	$(MAKE) -C backend delete TEMPLATE=product-mock
-	$(MAKE) -C backend delete TEMPLATE=shoppingcart-service
+	$(MAKE) -C backend delete TEMPLATE=auth REGION=${REGION}
+	$(MAKE) -C backend delete TEMPLATE=product-mock REGION=${REGION}
+	$(MAKE) -C backend delete TEMPLATE=shoppingcart-service REGION=${REGION}
 
 backend-tests:
 	$(MAKE) -C backend tests
